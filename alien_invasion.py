@@ -24,6 +24,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self.bullets.update()
+            self._update_bullets
             self._update_screen()
 
             self.screen.fill(self.bg_color)
@@ -62,9 +63,17 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         # create a new bullet and add it to the Bullets group
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
             
+    def _update_bullets(self):
+        # get rid of bullets that have reached the end of the screen
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        # print(len(self.bullets))
+
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
